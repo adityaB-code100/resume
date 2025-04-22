@@ -1,5 +1,7 @@
+
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Resume Info</title>
     <style>
@@ -16,7 +18,7 @@
             background: #ffffff;
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
@@ -32,6 +34,7 @@
         li {
             margin-bottom: 15px;
             line-height: 1.5;
+            page-break-inside: avoid;
         }
 
         strong {
@@ -45,6 +48,7 @@
             border-radius: 5px;
             white-space: pre-wrap;
             font-family: 'Courier New', Courier, monospace;
+            page-break-inside: avoid;
         }
 
         button {
@@ -71,49 +75,55 @@
         }
     </style>
 </head>
+
 <body>
 
-<div class="container" id="resume-content">
-    <h2>Extracted Resume Info</h2>
-    <ul>
-        <li><strong>Name:</strong> {{ info.Name }}</li>
-        <li><strong>Email:</strong> {{ info.Email }}</li>
-        <li><strong>Phone:</strong> {{ info.Phone }}</li>
-        <li><strong>Education:</strong> <pre>{{ info.Education }}</pre></li>
-        <li><strong>Projects:</strong> <pre>{{ info.Projects }}</pre></li>
-        <li><strong>Skills & Interests:</strong> <pre>{{ info['Skills & Interests'] }}</pre></li>
-        <li><strong>Positions of Responsibility:</strong> <pre>{{ info.Responsibilities }}</pre></li>
-    </ul>
-</div>
+    <div class="container" id="resume-content">
+        <h2>Extracted Resume Info</h2>
+        <ul>
+            <li><strong>Name:</strong> {{ info.Name }}</li>
+            <li><strong>Email:</strong> {{ info.Email }}</li>
+            <li><strong>Phone:</strong> {{ info.Phone }}</li>
+            <li><strong>Education:</strong>
+                <pre>{{ info.Education }}</pre>
+            </li>
+            <li><strong>Projects:</strong>
+                <pre>{{ info.Projects }}</pre>
+            </li>
+            <li><strong>Skills & Interests:</strong>
+                <pre>{{ info['Skills & Interests'] }}</pre>
+            </li>
+            <li><strong>Positions of Responsibility:</strong>
+                <pre>{{ info.Responsibilities }}</pre>
+            </li>
+        </ul>
+    </div>
 
-<button class="no-print" onclick="downloadPDF()">Download as PDF</button>
+    <button class="no-print" onclick="downloadPDF()">Download as PDF</button>
 
-<!-- html2pdf.js CDN -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Dynamic-height PDF rendering -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<script>
-    function downloadPDF() {
-        const element = document.getElementById('resume-content');
+    <script>
+        async function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const element = document.getElementById('resume-content');
 
-        const opt = {
-            margin:       [10, 10, 10, 10],
-            filename:     'resume-info.pdf',
-            image:        { type: 'jpeg', quality: 1 },
-            html2canvas:  {
-                scale: 2,     // Increase resolution
-                useCORS: true
-            },
-            jsPDF:        {
-                unit: 'mm',
-                format: 'a4',
-                orientation: 'portrait'
-            },
-            pagebreak: { mode: ['css', 'legacy'] }
-        };
+            const canvas = await html2canvas(element, { scale: 3 });
+            const imgData = canvas.toDataURL('image/png');
 
-        html2pdf().set(opt).from(element).save();
-    }
-</script>
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'px',
+                format: [canvas.width, canvas.height] // Fit to content
+            });
+
+            pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+            pdf.save('resume-info.pdf');
+        }
+    </script>
 
 </body>
+
 </html>
