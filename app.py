@@ -14,6 +14,8 @@ def home():
             resume_file.save(file_path)
             extracted_text = extract_text(file_path)
             extracted_info = extract_info(extracted_text)
+
+            
             return render_template('result.html', info=extracted_info)
     return render_template('index.html')
 

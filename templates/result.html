@@ -2,8 +2,78 @@
 <html>
 <head>
     <title>Resume Info</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        strong {
+            color: #555;
+        }
+
+        pre {
+            margin: 5px 0 0 0;
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        button {
+            display: block;
+            margin: 20px auto 0 auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
 </head>
 <body>
+
+<div class="container" id="resume-content">
     <h2>Extracted Resume Info</h2>
     <ul>
         <li><strong>Name:</strong> {{ info.Name }}</li>
@@ -14,5 +84,36 @@
         <li><strong>Skills & Interests:</strong> <pre>{{ info['Skills & Interests'] }}</pre></li>
         <li><strong>Positions of Responsibility:</strong> <pre>{{ info.Responsibilities }}</pre></li>
     </ul>
+</div>
+
+<button class="no-print" onclick="downloadPDF()">Download as PDF</button>
+
+<!-- html2pdf.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script>
+    function downloadPDF() {
+        const element = document.getElementById('resume-content');
+
+        const opt = {
+            margin:       [10, 10, 10, 10],
+            filename:     'resume-info.pdf',
+            image:        { type: 'jpeg', quality: 1 },
+            html2canvas:  {
+                scale: 2,     // Increase resolution
+                useCORS: true
+            },
+            jsPDF:        {
+                unit: 'mm',
+                format: 'a4',
+                orientation: 'portrait'
+            },
+            pagebreak: { mode: ['css', 'legacy'] }
+        };
+
+        html2pdf().set(opt).from(element).save();
+    }
+</script>
+
 </body>
 </html>
