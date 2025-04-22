@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resume Info</title>
+</head>
+<body>
+    <h2>Extracted Resume Info</h2>
+    <ul>
+        <li><strong>Name:</strong> {{ info.Name }}</li>
+        <li><strong>Email:</strong> {{ info.Email }}</li>
+        <li><strong>Phone:</strong> {{ info.Phone }}</li>
+        <li><strong>Education:</strong> <pre>{{ info.Education }}</pre></li>
+        <li><strong>Projects:</strong> <pre>{{ info.Projects }}</pre></li>
+        <li><strong>Skills & Interests:</strong> <pre>{{ info['Skills & Interests'] }}</pre></li>
+        <li><strong>Positions of Responsibility:</strong> <pre>{{ info.Responsibilities }}</pre></li>
+    </ul>
+</body>
+</html>
